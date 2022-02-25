@@ -2,15 +2,13 @@ package ex.travel.controller;
 
 import ex.travel.domain.Post;
 import ex.travel.domain.User;
+import ex.travel.repository.PostRepository;
 import ex.travel.repository.UserRepository;
 import ex.travel.service.PostService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -24,14 +22,15 @@ public class PostController {
     // Comment 연관관계 가져오기
 
     private final PostService postService;
+    private final PostRepository postRepository;
     private final UserRepository userRepository;
+
 
     //목록 보여줌
     //+comments
     @GetMapping("/post")
     public Result findPosts(){
         List<Post> posts = postService.findPosts();
-        System.out.println(posts);
         List<PostDtoResponse> collect = posts.stream()
                 .map(p -> new PostDtoResponse(p.getId(), p.getUser(), p.getContent(), p.getPostDate()))
                 .collect(Collectors.toList());
@@ -52,7 +51,14 @@ public class PostController {
 
         Long id = postService.savePost(post);
         return id;
+    }
 
+    //수정
+    @PostMapping(value = "/post/{postId}/edit")
+    public Long updatePost(@PathVariable("postId") Long postId, @RequestParam("content") String content) {
+        Long findId = postService.updatePost(postId, content, LocalDateTime.now()); //수정
+        Post post = postRepository.findById(postId); //조회
+        return post.getId();
     }
 
 
@@ -66,7 +72,7 @@ public class PostController {
 
     @Data
     @AllArgsConstructor
-    static class Result<T> {
+    static class Result<T> {    //제너릭 타입(외부에서 사용자에 의해 지정)
         private T data;
     }
 
@@ -78,4 +84,6 @@ public class PostController {
         private String content;
         private LocalDateTime localDateTime;
     }
+
+
 }

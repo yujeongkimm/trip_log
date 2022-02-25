@@ -1,5 +1,6 @@
 package ex.travel.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -26,4 +28,11 @@ public class Post {
     private String content;
 
     private LocalDateTime postDate;
+
+    //--비즈니스 로직--//
+    // 수정하기
+    public void update(String content, LocalDateTime postDate) {
+        this.content = content;
+        this.postDate = postDate;
+    }
 }
