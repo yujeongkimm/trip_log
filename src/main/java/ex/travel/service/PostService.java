@@ -39,5 +39,17 @@ public class PostService {
         return postId;
     }
 
+    //삭제
+    @Transactional
+    public int deleteWithReplies(Long id) {
+        //comment.delete
+
+        //Post post = postRepository.findById(id);
+        //post.deletePost(post);
+
+        int deleteId = postRepository.deleteById(id);
+        return deleteId;
+    }
+
 
 }

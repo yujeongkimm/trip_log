@@ -2,6 +2,7 @@ package ex.travel.repository;
 
 import ex.travel.domain.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -30,6 +31,12 @@ public class PostRepository {
         return em.find(Post.class, id);
     }
 
+    //삭제(D)
+    public int deleteById(Long id) {
+        return em.createQuery("delete from Post p where p.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 
 
 }

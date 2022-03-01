@@ -54,11 +54,18 @@ public class PostController {
     }
 
     //수정
-    @PostMapping(value = "/post/{postId}/edit")
+    @PostMapping("/post/{postId}/edit")
     public Long updatePost(@PathVariable("postId") Long postId, @RequestParam("content") String content) {
         Long findId = postService.updatePost(postId, content, LocalDateTime.now()); //수정
         Post post = postRepository.findById(postId); //조회
         return post.getId();
+    }
+
+    //삭제
+    @DeleteMapping("/post/{postId}/delete")
+    public int deletePostWithReplies(@PathVariable("postId") Long postId){
+        int id = postService.deleteWithReplies(postId);
+        return id;
     }
 
 
@@ -67,7 +74,6 @@ public class PostController {
     static class PostDtoRequest{
         private String content;
         private String name;
-        private LocalDateTime localDateTime;
     }
 
     @Data
