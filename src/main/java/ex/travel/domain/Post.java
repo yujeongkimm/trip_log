@@ -22,6 +22,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
@@ -35,17 +36,12 @@ public class Post {
         this.user = user;
     }
 
-    //--비즈니스 로직--//
-    // 수정하기
-    public void update(String content, LocalDateTime postDate) {
-        this.content = content;
-        this.postDate = postDate;
-    }
-
     //삭제하기
     //@OneToMany 양방향 연관관계 끊기
     public void deletePost(Post post) {
         this.user.getPosts().remove(post);
         post.setUser(null);
     }
+
+    //--비즈니스 로직--//
 }
